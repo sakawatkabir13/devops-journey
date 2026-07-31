@@ -3,17 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Journey</title>
+    <title>My DevOps & Docker Compose Journey</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <main class="container">
         <h1>My DevOps Journey</h1>
-        <p>Version 2: Now running inside a Docker container.</p>
+
         <p>
-            This website will run in Docker, behind Nginx,
-            on an AWS EC2 server.
+            This website is running in Nginx and communicating
+            with a Python API through Docker networking.
         </p>
+
+        <h2>API status</h2>
+        <p id="api-result">Contacting the API...</p>
     </main>
+
+    <script>
+        async function loadApiInformation() {
+            const resultElement = document.getElementById("api-result");
+
+            try {
+                const response = await fetch("/api/info");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                resultElement.textContent =
+                    `${data.message} | Container: ${data.hostname} | Requests: ${data.requests}`;
+            } catch (error) {
+                resultElement.textContent =
+                    `API request failed: ${error.message}`;
+            }
+        }
+
+        loadApiInformation();
+    </script>
 </body>
 </html>
